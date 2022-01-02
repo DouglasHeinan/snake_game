@@ -10,6 +10,7 @@ from snake import Snake
 from food import Food
 from score import Score
 import time
+import json
 
 SCREEN = Screen()
 
@@ -21,6 +22,11 @@ def main():
     SCREEN.title("Hungry Snake")
     SCREEN.tracer(0)
     SCREEN.update()
+    username = "place_holder"
+
+    with open(".snake_scores", "r") as f:
+        x = f.read()
+        print("contents of the file", x)
 
     snake = Snake()
     food = Food()
@@ -49,9 +55,17 @@ def main():
             score.increase()
 
         """After each move, the program checks to see if the game has ended and, if so, 
-        it displays the users final score"""
+        it displays the user's final score"""
         game_over = game_end(snake)
+
     score.final()
+    user_score = [username, score.score]
+    with open(".snake_scores", "r") as f:
+        the_score = f.read()
+        real_score = json.loads(the_score)
+        real_score.append(user_score)
+    with open(".snake_scores", "w+") as f:
+        f.write(json.dumps(real_score))
 
     SCREEN.exitonclick()
 
