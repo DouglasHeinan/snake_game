@@ -1,0 +1,75 @@
+"""
+Questions/thoughts/goals for this code:
+--The little red food balls could be made to appear NOT in a space that the snake body is also in.
+--There is a lag between the pressing of the arrow button and snake response.
+--Plan to add high score tracking.
+"""
+
+from turtle import Screen
+from snake import Snake
+from food import Food
+from score import Score
+import time
+
+SCREEN = Screen()
+
+
+def main():
+    """This program runs a game of Snake, as used to be common on old phones"""
+    SCREEN.setup(width=600, height=600)
+    SCREEN.bgcolor('black')
+    SCREEN.title("Hungry Snake")
+    SCREEN.tracer(0)
+    SCREEN.update()
+
+    snake = Snake()
+    food = Food()
+    score = Score()
+
+    """A series of onkey events to move the snake"""
+    SCREEN.listen()
+    SCREEN.onkey(snake.up, 'Up')
+    SCREEN.onkey(snake.left, 'Left')
+    SCREEN.onkey(snake.right, 'Right')
+    SCREEN.onkey(snake.down, 'Down')
+
+    """While the game is not over, the snake continues moving forward one space every tenth of a second"""
+    game_over = False
+    while not game_over:
+        SCREEN.update()
+        time.sleep(.1)
+
+        snake.move()
+
+        """If the snake eats any of the randomly distributed food, it grows by one segment 
+        and the user's score increases"""
+        if snake.head.distance(food) < 15:
+            food.new_food()
+            snake.grow_snake()
+            score.increase()
+
+        """After each move, the program checks to see if the game has ended and, if so, 
+        it displays the users final score"""
+        game_over = game_end(snake)
+    score.final()
+
+    SCREEN.exitonclick()
+
+
+"""This function runs after each move to check for game-end conditions"""
+
+
+def game_end(snake):
+    game_over = False
+    if snake.head.xcor() > 299 or snake.head.xcor() < -299:
+        game_over = True
+    if snake.head.ycor() > 299 or snake.head.ycor() < -299:
+        game_over = True
+    for segment in snake.segments[1:]:
+        if snake.head.distance(segment) < 10:
+            game_over = True
+    return game_over
+
+
+if __name__ == '__main__':
+    main()
