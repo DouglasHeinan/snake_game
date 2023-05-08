@@ -24,24 +24,23 @@ def main():
     SCREEN.update()
     username = "place_holder"
 
-    with open(".snake_scores", "r") as f:
-        x = f.read()
-        print("contents of the file", x)
+    # with open(".snake_scores", "r") as f:
+    #     x = f.read()
+    #     print("contents of the file", x)
 
     snake = Snake()
     food = Food()
     score = Score()
 
-    """A series of onkey events to move the snake"""
-    SCREEN.listen()
-    SCREEN.onkey(snake.up, 'Up')
-    SCREEN.onkey(snake.left, 'Left')
-    SCREEN.onkey(snake.right, 'Right')
-    SCREEN.onkey(snake.down, 'Down')
-
     """While the game is not over, the snake continues moving forward one space every tenth of a second"""
     game_over = False
     while not game_over:
+        """A series of onkey events to move the snake"""
+        SCREEN.listen()
+        SCREEN.onkey(snake.up, 'Up')
+        SCREEN.onkey(snake.left, 'Left')
+        SCREEN.onkey(snake.right, 'Right')
+        SCREEN.onkey(snake.down, 'Down')
         SCREEN.update()
         time.sleep(.1)
 
@@ -56,16 +55,16 @@ def main():
 
         """After each move, the program checks to see if the game has ended and, if so, 
         it displays the user's final score"""
-        game_over = game_end(snake)
+        if game_end(snake):
+            game_over = play_again(score, SCREEN, snake)
 
-    score.final()
-    user_score = [username, score.score]
-    with open(".snake_scores", "r") as f:
-        the_score = f.read()
-        real_score = json.loads(the_score)
-        real_score.append(user_score)
-    with open(".snake_scores", "w+") as f:
-        f.write(json.dumps(real_score))
+    # user_score = [username, score.score]
+    # with open(".snake_scores", "r") as f:
+    #     the_score = f.read()
+    #     real_score = json.loads(the_score)
+    #     real_score.append(user_score)
+    # with open(".snake_scores", "w+") as f:
+    #     f.write(json.dumps(real_score))
 
     SCREEN.exitonclick()
 
@@ -83,6 +82,21 @@ def game_end(snake):
         if snake.head.distance(segment) < 10:
             game_over = True
     return game_over
+
+
+def play_again(score, screen, snake):
+    play = screen.textinput("Play again?", "(Y or N )").upper()
+    while play != "Y" and play != "N":
+        play = screen.textinput("Y or N only, please.", "(Y or N)").upper()
+    if play == "N":
+        score.reset(play)
+        score.final()
+        return True
+    else:
+        score.reset(play)
+        score.update()
+        snake.reset()
+        return False
 
 
 if __name__ == '__main__':
