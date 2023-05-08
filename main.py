@@ -10,7 +10,6 @@ from snake import Snake
 from food import Food
 from score import Score
 import time
-import json
 
 SCREEN = Screen()
 
