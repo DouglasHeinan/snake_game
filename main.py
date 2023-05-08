@@ -23,10 +23,6 @@ def main():
     SCREEN.update()
     username = "place_holder"
 
-    # with open(".snake_scores", "r") as f:
-    #     x = f.read()
-    #     print("contents of the file", x)
-
     snake = Snake()
     food = Food()
     score = Score()
@@ -57,13 +53,6 @@ def main():
         if game_end(snake):
             game_over = play_again(score, SCREEN, snake)
 
-    # user_score = [username, score.score]
-    # with open(".snake_scores", "r") as f:
-    #     the_score = f.read()
-    #     real_score = json.loads(the_score)
-    #     real_score.append(user_score)
-    # with open(".snake_scores", "w+") as f:
-    #     f.write(json.dumps(real_score))
 
     SCREEN.exitonclick()
 
